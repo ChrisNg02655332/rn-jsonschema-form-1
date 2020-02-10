@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { View, Button, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  StyleSheet
+} from "react-native";
 import PropTypes from "prop-types";
 import { default as DefaultErrorList } from "./ErrorList";
 import {
@@ -244,22 +250,25 @@ export default class Form extends Component {
           this.formElement = form;
         }}
       >
-        {this.renderErrors()}
-        <_SchemaField
-          schema={schema}
-          uiSchema={uiSchema}
-          styleSheet={styleSheet}
-          errorSchema={errorSchema}
-          idSchema={idSchema}
-          idPrefix={idPrefix}
-          formData={formData}
-          onChange={this.onChange}
-          onBlur={this.onBlur}
-          onFocus={this.onFocus}
-          registry={registry}
-          safeRenderCompletion={safeRenderCompletion}
-          disabled={disabled}
-        />
+        <ScrollView>
+          {this.renderErrors()}
+          <_SchemaField
+            schema={schema}
+            uiSchema={uiSchema}
+            styleSheet={styleSheet}
+            errorSchema={errorSchema}
+            idSchema={idSchema}
+            idPrefix={idPrefix}
+            formData={formData}
+            onChange={this.onChange}
+            onBlur={this.onBlur}
+            onFocus={this.onFocus}
+            registry={registry}
+            safeRenderCompletion={safeRenderCompletion}
+            disabled={disabled}
+          />
+        </ScrollView>
+
         {children ? (
           children
         ) : (
