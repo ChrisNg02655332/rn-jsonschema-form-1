@@ -10,7 +10,7 @@ const widgetMap = {
     radio: "RadioWidget",
     select: "SelectWidget",
     hidden: "HiddenWidget",
-    vini:"ViniButton"
+    vini: "ViniButton",
   },
   string: {
     text: "TextWidget",
@@ -40,6 +40,7 @@ const widgetMap = {
     range: "RangeWidget",
     radio: "RadioWidget",
     hidden: "HiddenWidget",
+    LocationSelector: "TextWidget",
   },
   integer: {
     text: "TextWidget",
@@ -128,7 +129,7 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
     const refSchema = findSchemaDefinition(schema.$ref, definitions);
     return computeDefaults(refSchema, defaults, definitions);
   } else if (isFixedItems(schema)) {
-    defaults = schema.items.map(itemSchema =>
+    defaults = schema.items.map((itemSchema) =>
       computeDefaults(itemSchema, undefined, definitions)
     );
   }
@@ -194,7 +195,7 @@ export function getDefaultFormState(_schema, formData, definitions = {}) {
 export function getUiOptions(uiSchema) {
   // get all passed options from ui:widget, ui:options, and ui:<optionName>
   return Object.keys(uiSchema)
-    .filter(key => key.indexOf("ui:") === 0)
+    .filter((key) => key.indexOf("ui:") === 0)
     .reduce((options, key) => {
       const value = uiSchema[key];
 
@@ -267,24 +268,26 @@ export function orderProperties(properties, order) {
     return properties;
   }
 
-  const arrayToHash = arr =>
+  const arrayToHash = (arr) =>
     arr.reduce((prev, curr) => {
       prev[curr] = true;
       return prev;
     }, {});
-  const errorPropList = arr =>
+  const errorPropList = (arr) =>
     arr.length > 1
       ? `properties '${arr.join("', '")}'`
       : `property '${arr[0]}'`;
   const propertyHash = arrayToHash(properties);
   const orderHash = arrayToHash(order);
-  const extraneous = order.filter(prop => prop !== "*" && !propertyHash[prop]);
+  const extraneous = order.filter(
+    (prop) => prop !== "*" && !propertyHash[prop]
+  );
   if (extraneous.length) {
     throw new Error(
       `uiSchema order list contains extraneous ${errorPropList(extraneous)}`
     );
   }
-  const rest = properties.filter(prop => !orderHash[prop]);
+  const rest = properties.filter((prop) => !orderHash[prop]);
   const restIndex = order.indexOf("*");
   if (restIndex === -1) {
     if (rest.length) {
@@ -330,7 +333,7 @@ export function isSelect(_schema, definitions = {}) {
   if (Array.isArray(schema.enum)) {
     return true;
   } else if (Array.isArray(altSchemas)) {
-    return altSchemas.every(altSchemas => isConstant(altSchemas));
+    return altSchemas.every((altSchemas) => isConstant(altSchemas));
   }
   return false;
 }
@@ -356,7 +359,7 @@ export function isFixedItems(schema) {
   return (
     Array.isArray(schema.items) &&
     schema.items.length > 0 &&
-    schema.items.every(item => isObject(item))
+    schema.items.every((item) => isObject(item))
   );
 }
 
@@ -436,7 +439,7 @@ export function stubExistingAdditionalProperties(
     ...schema,
     properties: { ...schema.properties },
   };
-  Object.keys(formData).forEach(key => {
+  Object.keys(formData).forEach((key) => {
     if (schema.properties.hasOwnProperty(key)) {
       // No need to stub, our schema already has the property
       return;
@@ -549,7 +552,7 @@ function withDependentSchema(
     throw new Error(`invalid: it is some ${typeof oneOf} instead of an array`);
   }
   // Resolve $refs inside oneOf.
-  const resolvedOneOf = oneOf.map(subschema =>
+  const resolvedOneOf = oneOf.map((subschema) =>
     subschema.hasOwnProperty("$ref")
       ? resolveReference(subschema, definitions, formData)
       : subschema
@@ -570,7 +573,7 @@ function withExactlyOneSubschema(
   dependencyKey,
   oneOf
 ) {
-  const validSubschemas = oneOf.filter(subschema => {
+  const validSubschemas = oneOf.filter((subschema) => {
     if (!subschema.properties) {
       return false;
     }
@@ -788,7 +791,7 @@ export function dataURItoBlob(dataURI) {
   // Get mime-type from params
   const type = params[0].replace("data:", "");
   // Filter the name property from params
-  const properties = params.filter(param => {
+  const properties = params.filter((param) => {
     return param.split("=")[0] === "name";
   });
   // Look for the name and use unknown if no name property.
@@ -827,11 +830,12 @@ export function rangeSpec(schema) {
   return spec;
 }
 
-
-
-export function getStyle(incomingStyle,styleName,widgetName){
-  if(incomingStyle && incomingStyle[widgetName] && incomingStyle[widgetName][styleName] )
-    return incomingStyle[widgetName][styleName]
-  else
-  return {}
+export function getStyle(incomingStyle, styleName, widgetName) {
+  if (
+    incomingStyle &&
+    incomingStyle[widgetName] &&
+    incomingStyle[widgetName][styleName]
+  )
+    return incomingStyle[widgetName][styleName];
+  else return {};
 }
